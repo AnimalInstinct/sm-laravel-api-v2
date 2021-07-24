@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -10,7 +10,7 @@ class Place extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['name','title','description'];
+    protected $fillable = ['name', 'title', 'description'];
 
     public function city()
     {
@@ -21,7 +21,7 @@ class Place extends Model
     {
         return $this->belongsTo('App\District');
     }
-    
+
     public function country()
     {
         return $this->belongsTo('App\Country');

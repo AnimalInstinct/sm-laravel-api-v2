@@ -1,8 +1,7 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -46,7 +45,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function images(){
+    public function images()
+    {
         return $this->morphMany('App\Image', 'imageable');
     }
 }

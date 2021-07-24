@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -27,7 +27,8 @@ class Category extends Model
         'deleted_at'
     ];
 
-    public function images(){
+    public function images()
+    {
         return $this->morphMany('App\Image', 'imageable');
     }
 }

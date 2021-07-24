@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -31,7 +31,8 @@ class Page extends Model
     //     return $this->belongsTo('App\Category');
     // }
 
-    public function images(){
+    public function images()
+    {
         return $this->morphMany('App\Image', 'imageable');
     }
 
@@ -39,8 +40,8 @@ class Page extends Model
     //     return $this->belongsTo('App\Language');
     // }
 
-    public function site() {
+    public function site()
+    {
         return $this->belongsTo('App\Site');
     }
-
 }

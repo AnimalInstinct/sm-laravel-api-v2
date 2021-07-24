@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Spatie\Permission\Guard;
 use Illuminate\Support\Collection;
@@ -96,7 +96,7 @@ class Permission extends Model implements PermissionContract
     {
         $guardName = $guardName ?? Guard::getDefaultName(static::class);
         $permission = static::getPermissions(['name' => $name, 'guard_name' => $guardName])->first();
-        if (! $permission) {
+        if (!$permission) {
             throw PermissionDoesNotExist::create($name, $guardName);
         }
 
@@ -118,7 +118,7 @@ class Permission extends Model implements PermissionContract
         $guardName = $guardName ?? Guard::getDefaultName(static::class);
         $permission = static::getPermissions(['id' => $id, 'guard_name' => $guardName])->first();
 
-        if (! $permission) {
+        if (!$permission) {
             throw PermissionDoesNotExist::withId($id, $guardName);
         }
 
@@ -138,7 +138,7 @@ class Permission extends Model implements PermissionContract
         $guardName = $guardName ?? Guard::getDefaultName(static::class);
         $permission = static::getPermissions(['name' => $name, 'guard_name' => $guardName])->first();
 
-        if (! $permission) {
+        if (!$permission) {
             return static::query()->create(['name' => $name, 'guard_name' => $guardName]);
         }
 
