@@ -6,20 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
-class City extends Model
+class Country extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'deleted_at'];
 
-    public function districts()
+    public function cities()
     {
-        return $this->hasMany('App\District');
-    }
-
-    public function country()
-    {
-        return $this->belonsTo('App\Country');
+        return $this->hasMany('App\City');
     }
 
     public function places()
