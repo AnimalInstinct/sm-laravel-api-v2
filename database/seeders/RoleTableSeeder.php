@@ -15,7 +15,8 @@ class RoleTableSeeder extends Seeder
     public function run()
     {
         $role = new Role();
-        $role->name = 'Registered';
+        $role->name = 'registered';
+        $role->guard_name = 'api';
         $role->save();
         $role->givePermissionTo([
             'homepage-view',
@@ -23,7 +24,8 @@ class RoleTableSeeder extends Seeder
         ]);
 
         $role = new Role();
-        $role->name = 'Administrator';
+        $role->name = 'administrator';
+        $role->guard_name = 'api';
         $role->save();
         $role->givePermissionTo([
             'homepage-view',
@@ -103,7 +105,8 @@ class RoleTableSeeder extends Seeder
         ]);
 
         $role = new Role();
-        $role->name = 'Partner';
+        $role->name = 'aartner';
+        $role->guard_name = 'api';
         $role->save();
         $role->givePermissionTo([
             'homepage-view',
@@ -111,7 +114,8 @@ class RoleTableSeeder extends Seeder
         ]);
 
         $role = new Role();
-        $role->name = 'Sales';
+        $role->name = 'aales';
+        $role->guard_name = 'api';
         $role->save();
         $role->givePermissionTo([
             'homepage-view',
@@ -119,7 +123,8 @@ class RoleTableSeeder extends Seeder
         ]);
 
         $role = new Role();
-        $role->name = 'Active';
+        $role->name = 'active';
+        $role->guard_name = 'api';
         $role->save();
         $role->givePermissionTo([
             'homepage-view',
@@ -128,7 +133,8 @@ class RoleTableSeeder extends Seeder
 
 
         $role = new Role();
-        $role->name = 'Author';
+        $role->name = 'author';
+        $role->guard_name = 'api';
         $role->save();
         $role->givePermissionTo([
             'page-create',

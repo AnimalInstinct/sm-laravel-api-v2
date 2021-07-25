@@ -19,8 +19,8 @@ class UserTableSeeder extends Seeder
         $admin->name = 'Administrator';
         $admin->email = 'admin@yourdomain.com';
         $admin->password = Hash::make('administrator');
-        $admin->activation_token = '';
+        $admin->remember_token = '';
         $admin->save();
-        $admin->assignRole('Administrator', 'Author');
+        $admin->assignRole('administrator', 'author');
     }
 }
