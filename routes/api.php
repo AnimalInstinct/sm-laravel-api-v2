@@ -1,17 +1,18 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 
 Route::group([
     'prefix' => 'auth',
 ], function () {
-    Route::post('signup', 'AuthController@signup');
-    Route::post('signin', 'AuthController@signin');
-    Route::post('logout', 'AuthController@logout');
+    Route::post('signup', [AuthController::class, 'signup']);
+    Route::post('signin', [AuthController::class, 'signin']);
+    Route::post('logout', [AuthController::class, 'logout']);
     Route::group([
         'middleware' => 'auth:api'
     ], function () {
-        Route::post('signup/activate/', 'AuthController@signupActivate');
+        Route::post('signup/activate/', [AuthController::class, 'signupActivate']);
     });
 });
 
