@@ -5,16 +5,16 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Resources\CountryResource;
-use App\Country;
+use App\Models\Country;
 
 class CountryController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth:api');
-        $this->middleware('permission:country-list', ['only'=>['index']]);
+        $this->middleware('permission:country-list', ['only' => ['index']]);
         $this->middleware('permission:country-create', ['only' => ['store']]);
-        $this->middleware('permission:country-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:country-edit', ['only' => ['edit', 'update']]);
         $this->middleware('permission:country-delete', ['only' => ['destroy']]);
     }
     /**
@@ -24,7 +24,7 @@ class CountryController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->showTrashed){
+        if ($request->showTrashed) {
             $countries = Country::onlyTrashed()->get();
         } else {
             $countries = Country::all();
@@ -53,7 +53,7 @@ class CountryController extends Controller
     public function show($id)
     {
         $country = Country::where('id', $id)->withTrashed()->get()->first();
-        return new CountryResource($country) ;
+        return new CountryResource($country);
     }
 
     /**
@@ -79,7 +79,7 @@ class CountryController extends Controller
     public function destroy(Request $request, $id)
     {
         $country = Country::where('id', $id)->withTrashed()->get()->first();
-        if ($request->deleted_at == null){
+        if ($request->deleted_at == null) {
             $country->delete();
             return new CountryResource($country);
         } else {

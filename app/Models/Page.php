@@ -33,7 +33,7 @@ class Page extends Model
 
     public function images()
     {
-        return $this->morphMany('App\Image', 'imageable');
+        return $this->morphMany('App\Models\Image', 'imageable');
     }
 
     // public function language() {
@@ -42,6 +42,6 @@ class Page extends Model
 
     public function site()
     {
-        return $this->belongsTo('App\Site');
+        return $this->belongsTo('App\Models\Site');
     }
 }

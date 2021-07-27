@@ -4,15 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\PageResource;
 use Illuminate\Http\Request;
-use App\Page;
+use App\Models\Page;
 
 class PageController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:page-list', ['only'=>['index']]);
+        $this->middleware('permission:page-list', ['only' => ['index']]);
         $this->middleware('permission:page-create', ['only' => ['store']]);
-        $this->middleware('permission:page-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:page-edit', ['only' => ['edit', 'update']]);
         $this->middleware('permission:page-delete', ['only' => ['destroy']]);
     }
 
@@ -35,13 +35,12 @@ class PageController extends Controller
 
     public function show(Request $request, $id)
     {
-        if ($request->type && $request->type == "alias"){
+        if ($request->type && $request->type == "alias") {
             $page = Page::where('alias', $id)->get()->first();
-            
         } else {
             $page = Page::where('id', $id)->withTrashed()->get()->first();
         }
-        if($page){
+        if ($page) {
             return new PageResource($page);
         } else {
             abort(404);

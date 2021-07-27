@@ -1,19 +1,20 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use App\Http\Resources\RoleResource;
-use App\Role;
-use App\Permission;
-use Auth;
+use App\Models\Role;
+use App\Models\Permission;
+
 class RoleController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth:api');
-        $this->middleware('permission:role-list', ['only'=>['index']]);
+        $this->middleware('permission:role-list', ['only' => ['index']]);
         $this->middleware('permission:role-create', ['only' => ['store']]);
-        $this->middleware('permission:role-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:role-edit', ['only' => ['edit', 'update']]);
         $this->middleware('permission:role-delete', ['only' => ['destroy']]);
     }
     /**
@@ -26,7 +27,7 @@ class RoleController extends Controller
         //  return response()->json([
         //     'response'=>$request->id
         // ], 201);
-        if ($request->showTrashed === "true"){
+        if ($request->showTrashed === "true") {
             $roles = Role::onlyTrashed()->get();
         } else {
             $roles = Role::all();
@@ -56,7 +57,7 @@ class RoleController extends Controller
     public function show($id)
     {
         $role = Role::where('id', $id)->withTrashed()->get()->first();
-        return new RoleResource($role) ;
+        return new RoleResource($role);
     }
 
     /**
@@ -82,7 +83,7 @@ class RoleController extends Controller
     public function destroy(Request $request, $id)
     {
         $role = Role::where('id', $id)->withTrashed()->get()->first();
-        if ($request->deleted_at == null){
+        if ($request->deleted_at == null) {
             $role->delete();
             return new RoleResource($role);
         } else {
@@ -90,28 +91,31 @@ class RoleController extends Controller
         }
     }
 
-    public function addPermission(Request $request) {
+    public function addPermission(Request $request)
+    {
         $role = Role::find($request->roleId);
         $permission = Permission::find($request->permissionId);
         $role->givePermissionTo($permission->name);
         return response()->json([
-            'permissions'=>$role->permissions
+            'permissions' => $role->permissions
         ], 200);
     }
 
-    public function removePermission(Request $request) {
+    public function removePermission(Request $request)
+    {
         $role = Role::find($request->roleId);
         $permission = Permission::find($request->permissionId);
         $permission->removeRole($role);
         return response()->json([
-            'permissions'=>$role->permissions
+            'permissions' => $role->permissions
         ], 200);
     }
 
-    public function rolePermissions(Request $request) {
+    public function rolePermissions(Request $request)
+    {
         $role = Role::withTrashed()->find($request->role);
         return response()->json([
-            'permissions'=>$role->permissions
+            'permissions' => $role->permissions
         ], 200);
     }
 }

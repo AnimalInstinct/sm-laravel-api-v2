@@ -1,18 +1,19 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use App\Http\Resources\PermissionResource;
-use App\Permission;
+use App\Models\Permission;
 
 class PermissionController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth:api');
-        $this->middleware('permission:permission-list', ['only'=>['index']]);
+        $this->middleware('permission:permission-list', ['only' => ['index']]);
         $this->middleware('permission:permission-create', ['only' => ['store']]);
-        $this->middleware('permission:permission-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:permission-edit', ['only' => ['edit', 'update']]);
         $this->middleware('permission:permission-delete', ['only' => ['destroy']]);
     }
     /**
@@ -22,7 +23,7 @@ class PermissionController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->showTrashed === "true"){
+        if ($request->showTrashed === "true") {
             $permissions = Permission::onlyTrashed()->get();
         } else {
             $permissions = Permission::all();
@@ -52,7 +53,7 @@ class PermissionController extends Controller
     public function show($id)
     {
         $permission = Permission::where('id', $id)->withTrashed()->get()->first();
-        return new PermissionResource($permission) ;
+        return new PermissionResource($permission);
     }
 
     /**
@@ -78,7 +79,7 @@ class PermissionController extends Controller
     public function destroy(Request $request, $id)
     {
         $permission = Permission::where('id', $id)->withTrashed()->get()->first();
-        if ($request->deleted_at == null){
+        if ($request->deleted_at == null) {
             $permission->delete();
             return new PermissionResource($permission);
         } else {

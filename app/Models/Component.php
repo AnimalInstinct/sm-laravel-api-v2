@@ -21,11 +21,11 @@ class Component extends Model
 
     public function images()
     {
-        return $this->morphMany('App\Image', 'imageable');
+        return $this->morphMany('App\Models\Image', 'imageable');
     }
 
     public function display_image()
     {
-        return $this->belongsTo('App\Image');
+        return $this->belongsTo('App\Models\Image');
     }
 }

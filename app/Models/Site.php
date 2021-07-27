@@ -14,11 +14,11 @@ class Site extends Model
 
     public function images()
     {
-        return $this->morphMany('App\Image', 'imageable');
+        return $this->morphMany('App\Models\Image', 'imageable');
     }
 
     public function pages()
     {
-        return $this->hasMany('App\Page');
+        return $this->hasMany('App\Models\Page');
     }
 }

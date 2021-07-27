@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Category;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Resources\CategoryResource;
 
@@ -11,10 +11,10 @@ class CategoryController extends Controller
     public function __construct()
     {
         // $this->middleware('auth:api');
-        $this->middleware('permission:category-list', ['only'=>['index']]);
+        $this->middleware('permission:category-list', ['only' => ['index']]);
         // $this->middleware('permission:category-view', ['only'=>['show']]);
         $this->middleware('permission:category-create', ['only' => ['store']]);
-        $this->middleware('permission:category-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:category-edit', ['only' => ['edit', 'update']]);
         $this->middleware('permission:category-delete', ['only' => ['destroy']]);
     }
 
@@ -37,18 +37,16 @@ class CategoryController extends Controller
 
     public function show(Request $request, $id)
     {
-        if ($request->type && $request->type == "alias"){
+        if ($request->type && $request->type == "alias") {
             $category = Category::where('alias', $id)->get()->first();
-            
         } else {
             $category = Category::where('id', $id)->withTrashed()->get()->first();
         }
-        if($category){
+        if ($category) {
             return new CategoryResource($category);
         } else {
             abort(404);
         }
-        
     }
 
     public function update(Request $request, $id)

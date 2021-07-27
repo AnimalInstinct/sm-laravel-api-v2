@@ -29,6 +29,6 @@ class Category extends Model
 
     public function images()
     {
-        return $this->morphMany('App\Image', 'imageable');
+        return $this->morphMany('App\Model\Image', 'imageable');
     }
 }

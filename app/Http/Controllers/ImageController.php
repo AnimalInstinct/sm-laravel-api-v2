@@ -3,22 +3,20 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Image;
+use App\Models\Image;
 use App\Http\Resources\ImageResource;
-use Illuminate\Support\Facades\Storage;
-use Intervention;
-use App\Page;
-use DB;
+use Intervention\Image\ImageManager;
 
 class ImageController extends Controller
 {
+
     public function __construct()
     {
         $this->middleware('auth:api');
-        $this->middleware('permission:image-list', ['only'=>['index']]);
+        $this->middleware('permission:image-list', ['only' => ['index']]);
         $this->middleware('permission:image-view', ['only' => ['show']]);
         $this->middleware('permission:image-create', ['only' => ['store']]);
-        $this->middleware('permission:image-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:image-edit', ['only' => ['edit', 'update']]);
         $this->middleware('permission:image-delete', ['only' => ['destroy']]);
     }
 
@@ -34,7 +32,9 @@ class ImageController extends Controller
 
     public function createThumbnail($path, $width, $height)
     {
-        $img = Intervention::make($path)->resize($width, $height, function ($constraint) {
+        $imageManager = new ImageManager(array('driver' => 'imagick'));
+
+        $img = $imageManager->make($path)->resize($width, $height, function ($constraint) {
             $constraint->aspectRatio();
         });
         $img->save($path);
@@ -46,7 +46,7 @@ class ImageController extends Controller
             'file' => 'required|mimes:jpeg,png,jpg,svg,gif',
         ]);
 
-        if($request->hasFile('file')) {
+        if ($request->hasFile('file')) {
             //get filename with extension
             $filenamewithextension = $request->file('file')->getClientOriginalName();
             //get filename without extension
@@ -54,7 +54,7 @@ class ImageController extends Controller
             //get file extension
             $extension = $request->file('file')->getClientOriginalExtension();
             //filename to store
-            $filenametostore = $filename.'_'.time().'.'.$extension;
+            $filenametostore = $filename . '_' . time() . '.' . $extension;
             //Upload File
             $request->file('file')->storeAs('/public/images', $filenametostore);
 
@@ -62,29 +62,29 @@ class ImageController extends Controller
             $image = new Image;
             $image->path = '/storage/images/';
             $image->name = $filenametostore;
-            $image->imageable_type = "App\\".$request->model;
+            $image->imageable_type = "App\\" . $request->model;
             $image->imageable_id = $request->id;
             $image->save();
 
-            if ($extension != 'svg'){
+            if ($extension != 'svg') {
                 //small thumbnail name
-                $smallthumbnail = 'small_'.$filename.'_'.time().'.'.$extension;
+                $smallthumbnail = 'small_' . $filename . '_' . time() . '.' . $extension;
                 //medium thumbnail name
-                $mediumthumbnail = 'medium_'.$filename.'_'.time().'.'.$extension;
+                $mediumthumbnail = 'medium_' . $filename . '_' . time() . '.' . $extension;
                 //large thumbnail name
-                $largethumbnail = 'large_'.$filename.'_'.time().'.'.$extension;
+                $largethumbnail = 'large_' . $filename . '_' . time() . '.' . $extension;
                 //Upload thumbnails
                 $request->file('file')->storeAs('/public/images/thumbnails', $smallthumbnail);
                 $request->file('file')->storeAs('public/images/thumbnails', $mediumthumbnail);
                 $request->file('file')->storeAs('/public/images/thumbnails', $largethumbnail);
                 //create small thumbnail
-                $smallthumbnailpath = public_path('/storage/images/thumbnails/'.$smallthumbnail);
+                $smallthumbnailpath = public_path('/storage/images/thumbnails/' . $smallthumbnail);
                 $this->createThumbnail($smallthumbnailpath, 150, 93);
                 //create medium thumbnail
-                $mediumthumbnailpath = public_path('/storage/images/thumbnails/'.$mediumthumbnail);
+                $mediumthumbnailpath = public_path('/storage/images/thumbnails/' . $mediumthumbnail);
                 $this->createThumbnail($mediumthumbnailpath, 300, 185);
                 //create large thumbnail
-                $largethumbnailpath = public_path('/storage/images/thumbnails/'.$largethumbnail);
+                $largethumbnailpath = public_path('/storage/images/thumbnails/' . $largethumbnail);
                 $this->createThumbnail($largethumbnailpath, 550, 340);
                 //Save thumbnails to image file in database
                 $image->thumbnail_sm = $smallthumbnail;
@@ -92,9 +92,6 @@ class ImageController extends Controller
                 $image->thumbnail_lg = $largethumbnail;
                 $image->save();
             }
-            
-
-            
         }
 
         return new ImageResource($image);

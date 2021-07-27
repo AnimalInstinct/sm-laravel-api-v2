@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Resources\UserResource;
-use App\User;
-use Auth;
-use App\Role;
+use App\Models\User;
+use App\Models\Role;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -18,7 +18,7 @@ class UserController extends Controller
         $this->middleware('permission:user-create', ['only' => ['store']]);
         $this->middleware('permission:user-edit', ['only' => ['edit', 'update']]);
         $this->middleware('permission:user-delete', ['only' => ['destroy']]);
-        $this->middleware('permission:user-assign-roles', ['only' => ['addRole', 'removeRole','assignRoleToAll']]);
+        $this->middleware('permission:user-assign-roles', ['only' => ['addRole', 'removeRole', 'assignRoleToAll']]);
         $this->middleware('permission:user-profile', ['only' => ['profile', 'userLoggedInRoles']]);
     }
     /**
@@ -36,8 +36,10 @@ class UserController extends Controller
         } else {
             $users = User::all();
         }
-        if ($request->role_id){
-            $users = User::whereHas("roles", function($roles) use ($request) { $roles->where("id", $request->role_id); })->get();
+        if ($request->role_id) {
+            $users = User::whereHas("roles", function ($roles) use ($request) {
+                $roles->where("id", $request->role_id);
+            })->get();
         }
         return UserResource::collection($users);
     }
@@ -101,12 +103,12 @@ class UserController extends Controller
     public function destroy(Request $request, $id)
     {
         $user = User::where('id', $id)->withTrashed()->get()->first();
-            if ($request->deleted_at == null) {
-                $user->delete();
-                return new UserResource($user);
-            } else {
-                $user->forceDelete();
-            }
+        if ($request->deleted_at == null) {
+            $user->delete();
+            return new UserResource($user);
+        } else {
+            $user->forceDelete();
+        }
     }
 
     public function addRole(Request $request)
@@ -115,7 +117,7 @@ class UserController extends Controller
         $role = Role::find($request->roleId);
         $user->assignRole($role->name);
         return response()->json([
-            'roles'=>$user->roles
+            'roles' => $user->roles
         ], 200);
     }
 
@@ -124,21 +126,23 @@ class UserController extends Controller
         $user = User::withTrashed()->find($request->userId);
         $user->removeRole($request->roleId);
         return response()->json([
-            'roles'=>$user->roles
+            'roles' => $user->roles
         ], 200);
     }
 
-    public function userRoles(Request $request) {
+    public function userRoles(Request $request)
+    {
         $user = User::withTrashed()->find($request->user);
         return response()->json([
-            'roles'=>$user->roles
+            'roles' => $user->roles
         ], 200);
     }
 
-    public function userLoggedInRoles(Request $request) {
+    public function userLoggedInRoles(Request $request)
+    {
         $user = Auth::user();
         return response()->json([
-            'roles'=>$user->roles
+            'roles' => $user->roles
         ], 200);
     }
 
@@ -150,14 +154,14 @@ class UserController extends Controller
         // ], 200);
         $users = User::all()->withTrashed();
         foreach ($users as $key => $user) {
-            if (!$user->hasAllRoles(Role::all())){
+            if (!$user->hasAllRoles(Role::all())) {
                 $role = Role::find($user->role_id);
                 $user->assignRole($role->name);
                 $user->assignRole('Active');
             };
         }
         return response()->json([
-            'response'=>'All roles assigned'
+            'response' => 'All roles assigned'
         ], 200);
     }
 }

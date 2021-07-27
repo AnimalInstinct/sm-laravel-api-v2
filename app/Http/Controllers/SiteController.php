@@ -4,17 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\SiteResource;
 use Illuminate\Http\Request;
-use App\Site;
+use App\Models\Site;
 
 class SiteController extends Controller
 
 {
     public function __construct()
     {
-        $this->middleware('permission:site-list', ['only'=>['index']]);
-        $this->middleware('permission:site-view', ['only'=>['show']]);
+        $this->middleware('permission:site-list', ['only' => ['index']]);
+        $this->middleware('permission:site-view', ['only' => ['show']]);
         $this->middleware('permission:site-create', ['only' => ['store']]);
-        $this->middleware('permission:site-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:site-edit', ['only' => ['edit', 'update']]);
         $this->middleware('permission:site-delete', ['only' => ['destroy']]);
     }
 
@@ -37,13 +37,12 @@ class SiteController extends Controller
 
     public function show(Request $request, $id)
     {
-        if ($request->type && $request->type == "alias"){
+        if ($request->type && $request->type == "alias") {
             $site = Site::where('alias', $id)->get()->first();
-            
         } else {
             $site = Site::where('id', $id)->withTrashed()->get()->first();
         }
-        if($site){
+        if ($site) {
             return new SiteResource($site);
         } else {
             abort(404);

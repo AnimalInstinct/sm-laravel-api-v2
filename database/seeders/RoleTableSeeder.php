@@ -105,7 +105,7 @@ class RoleTableSeeder extends Seeder
         ]);
 
         $role = new Role();
-        $role->name = 'aartner';
+        $role->name = 'partner';
         $role->guard_name = 'api';
         $role->save();
         $role->givePermissionTo([
@@ -114,7 +114,7 @@ class RoleTableSeeder extends Seeder
         ]);
 
         $role = new Role();
-        $role->name = 'aales';
+        $role->name = 'sales';
         $role->guard_name = 'api';
         $role->save();
         $role->givePermissionTo([

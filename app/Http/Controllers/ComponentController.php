@@ -4,17 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ComponentResource;
 use Illuminate\Http\Request;
-use App\Component;
+use App\Models\Component;
 
 class ComponentController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth:api');
-        $this->middleware('permission:component-list', ['only'=>['index']]);
+        // $this->middleware('permission:component-list', ['only' => ['index']]);
         $this->middleware('permission:component-view', ['only' => ['show']]);
         $this->middleware('permission:component-create', ['only' => ['store']]);
-        $this->middleware('permission:component-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:component-edit', ['only' => ['edit', 'update']]);
         $this->middleware('permission:component-delete', ['only' => ['destroy']]);
     }
 

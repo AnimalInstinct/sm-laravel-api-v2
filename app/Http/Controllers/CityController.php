@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\City;
+use App\Models\City;
 use App\Http\Resources\CityResource;
 
 class CityController extends Controller
@@ -11,9 +11,9 @@ class CityController extends Controller
     public function __construct()
     {
         $this->middleware('auth:api');
-        $this->middleware('permission:city-list', ['only'=>['index']]);
+        $this->middleware('permission:city-list', ['only' => ['index']]);
         $this->middleware('permission:city-create', ['only' => ['store']]);
-        $this->middleware('permission:city-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:city-edit', ['only' => ['edit', 'update']]);
         $this->middleware('permission:city-delete', ['only' => ['destroy']]);
     }
     /**
@@ -21,9 +21,9 @@ class CityController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        if ($request->showTrashed){
+        if ($request->showTrashed) {
             $cities = City::onlyTrashed()->get();
         } else {
             $cities = City::all();
@@ -52,7 +52,7 @@ class CityController extends Controller
     public function show($id)
     {
         $city = City::where('id', $id)->withTrashed()->get()->first();
-        return new CountryResource($country) ;
+        return new CountryResource($country);
     }
 
     /**

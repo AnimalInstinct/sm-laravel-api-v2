@@ -6,9 +6,7 @@ use Illuminate\Http\Request;
 
 use Carbon\Carbon;
 use App\Models\User;
-use App\Models\Role;
 use App\Notifications\SignupActivate;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
